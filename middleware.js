@@ -1,4 +1,12 @@
-const isLoggedIn = (req, res, next) => {
+const { campgroundSchema, reviewSchema } = require("./schemas.js")
+const ExpressError = require("./utils/ExpressError")
+const Campground = require("./models/campground")
+
+
+
+
+
+module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         req.session.returnTo = req.originalUrl;
         req.flash("error", "You must be logged In")
@@ -6,4 +14,44 @@ const isLoggedIn = (req, res, next) => {
     }
     next()
 }
-module.exports = isLoggedIn;
+
+
+module.exports.campgroundValidate = (req, res, next) => {
+
+    const { error } = campgroundSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(",");
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+}
+
+module.exports.isAuthenticated = async (req, res, next) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+    if (!campground.author.equals(req.user._id)) {
+        req.flash("error", "You are not authorised to do that")
+        return res.redirect(`/campgrounds/${campground._id}`);
+    } next();
+}
+
+
+module.exports.isReviewAuth = async (req, res, next) => {
+    const { id, reviewId } = req.params;
+    const review = await Review.findById(reviewId);
+    if (!review.author.equals(req.user._id)) {
+        req.flash("error", "You are not authorised to do that")
+        return res.redirect(`/campgrounds/${campground._id}`);
+    } next();
+}
+
+module.exports.reviewValidate = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(",");
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+}

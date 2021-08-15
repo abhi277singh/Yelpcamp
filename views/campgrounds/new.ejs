@@ -2,7 +2,7 @@
     <div class="row">
         <h1 class="text-center">New Campground</h1>
         <div class="col-6 offset-3">
-            <form action="/campgrounds" method="POST" class="form-validate" novalidate>
+            <form action="/campgrounds" method="POST" class="form-validate" novalidate enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label" for="title">Title</label>
                     <input class="form-control" type="text" id="title" name="campground[title]" required>
@@ -19,14 +19,7 @@
                     </div>
                     <div class="valid-feedback">Looks Good</div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label" for="image">Image Url</label>
-                    <input class="form-control" type="text" id="image" name="campground[image]" required>
-                    <div class="invalid-feedback">
-                        Please Enter a valid Url
-                    </div>
-                    <div class="valid-feedback">Looks Good</div>
-                </div>
+
                 <div class="mb-3">
                     <label class="form-label" for="price">Campground Price</label>
                     <div class="input-group">
@@ -44,6 +37,20 @@
                         required></textarea>
                     <div class="invalid-feedback">Please Enter a Description</div>
                     <div class="valid-feedback">Looks Good</div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-file custom-file">
+                        <input type="file" class="form-file-input" id="image" name="image" multiple>
+                        <label class="form-file-label" for="image">
+                            <span class="form-file-text custom-file-label">Choose image(s)...</span>
+                            <span class="form-file-button">Browse</span>
+                        </label>
+                        <div class="invalid-feedback">
+                            Please select an image
+                        </div>
+                        <div class="valid-feedback">Looks Good</div>
+                    </div>
+
                 </div>
                 <div class="mb-3">
                     <button class="btn btn-success">Add Campground</button>
