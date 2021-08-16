@@ -1,7 +1,7 @@
-if (process.env.NODE_ENV = "production") {
+if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
-console.log(process.env.secret)
+
 
 const express = require("express")
 const mongoose = require("mongoose")
@@ -13,7 +13,7 @@ const ExpressError = require("./utils/ExpressError")
 const methodOverride = require("method-override")
 const campgroundRoutes = require("./routes/campgrounds")
 const reviewRoutes = require("./routes/reviews")
-const userRoutes = require("./routes/user")
+const userRoutes = require("./routes/users")
 const passport = require("passport");
 const localStrategy = require("passport-local")
 const User = require("./models/user")
@@ -37,6 +37,7 @@ const app = express()
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
+
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride("_method"))
 app.use(express.static(path.join(__dirname, "public")));
@@ -45,7 +46,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const sessionConfig = {
     secret: "thisisasecret",
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
         httpOnly: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
@@ -77,10 +78,6 @@ app.use("/campgrounds/:id/reviews", reviewRoutes)
 app.get("/", (req, res) => {
     res.render("home")
 })
-
-
-
-
 
 app.all("*", (req, res, next) => {
     next(new ExpressError("Error Not Found", 404))
