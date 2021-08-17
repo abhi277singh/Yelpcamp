@@ -20,7 +20,7 @@ const User = require("./models/user")
 const mongoSanitize = require("express-mongo-sanitize")
 const helmet = require("helmet");
 const { contentSecurityPolicy } = require("helmet");
-const MongoDBStore = require("connect-mongo")(session);
+const MongoDBStore = require("connect-mongodb-session")(session);
 
 const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelp-camp"
 
@@ -157,6 +157,8 @@ app.use((err, req, res, next) => {
     res.status(status).render("error", { err })
 })
 
-app.listen(3000, () => {
-    console.log("Listening")
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+    console.log(`Serving on port ${port}`)
 })
